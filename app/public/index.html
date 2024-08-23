@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+</head>
+<body>
+    <h1>Weather Forecast</h1>
+    <form id="weather-form">
+        <input type="text" id="location" placeholder="Enter location" required>
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="result">
+        <h2>Weather Details</h2>
+        <p id="location-name"></p>
+        <p id="temperature"></p>
+        <p id="condition"></p>
+        <p id="advice"></p>
+    </div>
+
+    <script>
+        document.getElementById('weather-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const location = document.getElementById('location').value;
+            
+            try {
+                const response = await fetch(`/weather?location=${encodeURIComponent(location)}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('location-name').innerText = `Location: ${data.location}`;
+                    document.getElementById('temperature').innerText = `Temperature: ${data.temperature} °C`;
+                    document.getElementById('condition').innerText = `Condition: ${data.condition}`;
+                    document.getElementById('advice').innerText = `Advice: ${data.advice}`;
+                } else {
+                    document.getElementById('location-name').innerText = '';
+                    document.getElementById('temperature').innerText = '';
+                    document.getElementById('condition').innerText = '';
+                    document.getElementById('advice').innerText = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+            }
+        });
+    </script>
+</body>
+</html>
